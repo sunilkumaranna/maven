@@ -93,10 +93,12 @@ under the License.
 
   <build>
     <plugins>
+      <!-- disable plugin in favor of src/main/resources/META-INF/sisu/javax.inject.Named
+           while waiting for a release of https://github.com/eclipse/sisu.inject/pull/5
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
-      </plugin>
+      </plugin-->
     </plugins>
   </build>
 
