@@ -193,10 +193,12 @@ under the License.
       </plugins>
     </pluginManagement>
     <plugins>
+      <!-- disable plugin in favor of src/main/resources/META-INF/sisu/javax.inject.Named
+           while waiting for a release of https://github.com/eclipse/sisu.inject/pull/5
       <plugin>
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
-      </plugin>
+      </plugin-->
       <plugin>
         <groupId>org.codehaus.modello</groupId>
         <artifactId>modello-maven-plugin</artifactId>
