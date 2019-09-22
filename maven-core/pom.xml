@@ -33,6 +33,10 @@ under the License.
   <name>Maven Core</name>
   <description>Maven Core classes.</description>
 
+  <properties>
+    <skipTests>true</skipTests>
+  </properties>
+
   <dependencies>
     <!--  Maven -->
     <dependency>
@@ -194,10 +198,9 @@ under the License.
           <execution>
             <!-- plexus-component-metadata:merge-metadata disabled in favor of src/main/resources/META-INF/plexus/components.xml
                  while waiting for a fix to https://github.com/codehaus-plexus/plexus-containers/issues/27 -->
-            <id>no-merge</id>
+            <phase>deploy</phase>
             <goals>
               <goal>generate-metadata</goal>
-              <goal>generate-test-metadata</goal>
             </goals>
           </execution>
         </executions>
