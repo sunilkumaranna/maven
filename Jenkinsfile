@@ -66,7 +66,7 @@ node(jenkinsEnv.nodeSelection(osNode)) {
             }
         }
 
-        tests = resolveScm source: [$class: 'GitSCMSource', credentialsId: '', id: '_', remote: 'https://gitbox.apache.org/repos/asf/maven-integration-testing.git', traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait'], [$class: 'GitToolSCMSourceTrait', gitTool: 'Default']]], targets: [BRANCH_NAME, 'master']
+        tests = resolveScm source: [$class: 'GitSCMSource', credentialsId: '', id: '_', remote: 'https://gitbox.apache.org/repos/asf/maven.git', traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait'], [$class: 'GitToolSCMSourceTrait', gitTool: 'Default']]], targets: [BRANCH_NAME, 'master']
     }
 }
 
@@ -78,13 +78,24 @@ for (String os in runITsOses) {
         String mvnName = jenkinsEnv.mvnFromVersion(os, "${runITsMvn}")
         echo "OS: ${os} JDK: ${jdk} => Label: ${osLabel} JDK: ${jdkName}"
 
+        def cmd = [
+          'mvn',
+          'verify',
+          '-DskipTests', '-Drat.skip'
+        ]
+        if (jdk == '7') {
+          // Java 7u80 has TLS 1.2 disabled by default: need to explicitely enable
+          cmd += '-Dhttps.protocols=TLSv1.2'
+        }
+
         String stageId = "${os}-jdk${jdk}"
         String stageLabel = "Rebuild ${os.capitalize()} Java ${jdk}"
         runITsTasks[stageId] = {
             node(jenkinsEnv.nodeSelection(osLabel)) {
+                def WORK_DIR=pwd()
                 stage("${stageLabel}") {
                     echo "NODE_NAME = ${env.NODE_NAME}"
-                    checkout scm
+                    checkout tests
                     withMaven(jdk: jdkName, maven: mvnName, mavenLocalRepo:"${WORK_DIR}/.repository", options:[
                         artifactsPublisher(disabled: false),
                         junitPublisher(ignoreAttachments: false),
@@ -94,7 +105,11 @@ for (String os in runITsOses) {
                         invokerPublisher(),
                         pipelineGraphPublisher()
                     ]) {
-                        sh "mvn clean ${MAVEN_GOAL} -B -U -e -fae -V -DskipTests"
+                      if (isUnix()) {
+                        sh cmd.join(' ')
+                      } else {
+                        bat cmd.join(' ')
+                      }
                     }
                 }
             }
