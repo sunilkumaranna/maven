@@ -79,7 +79,7 @@ for (String os in runITsOses) {
         echo "OS: ${os} JDK: ${jdk} => Label: ${osLabel} JDK: ${jdkName}"
 
         def cmd = [
-          'mvn',
+          'mvn', 'clean',
           'verify',
           '-DskipTests', '-Drat.skip'
         ]
