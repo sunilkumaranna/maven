@@ -28,17 +28,16 @@
   <version>2.0-SNAPSHOT</version>
 
   <name>Maven</name>
-
   <distributionManagement>
-    <snapshotRepository>
-      <id>repo-id</id>
-      <name>my snapshot repository</name>
-      <url>file:///path/to/snapshot/repo</url>
-    </snapshotRepository>
-    <repository>
-      <id>repo-id2</id>
-      <name>my repository</name>
-      <url>file:///path/to/repo</url>
-    </repository>
-  </distributionManagement>
+	<snapshotRepository>
+      		<id>repo-id</id>
+      		<name>my snapshot repository</name>
+      		<url>http://192.168.182.181:8081/repository/nexusjob/</url>
+    	</snapshotRepository>
+        <repository>
+            <id>internal</id>
+	    <name>my snapshot repository</name>
+            <url>http://192.168.182.181:8081/repository/nexusjob-release/</url>
+        </repository>
+</distributionManagement> 
 </project>
